@@ -1,0 +1,130 @@
+Question 19: Create the form which consists firstName, lastName, phoneNumber, email, and all scenarios mentioned below:-
+
+● firstName and lastName should be a minimum character of 5 and a maximum of 15.
+● Add proper validation for email.
+● phoneNumber should be 10 digits and valid.
+
+How will you achieve this problem statement?
+source code:
+import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
+
+void main() {
+  runApp(const MaterialApp(
+    home: RegistrationForm(),
+    debugShowCheckedModeBanner: false,
+  ));
+}
+
+class RegistrationForm extends StatefulWidget {
+  const RegistrationForm({super.key});
+
+  @override
+  State<RegistrationForm> createState() => _RegistrationFormState();
+}
+
+class _RegistrationFormState extends State<RegistrationForm> {
+  final _formKey = GlobalKey<FormBuilderState>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("User Registration Form"),
+        centerTitle: true,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: FormBuilder(
+          key: _formKey,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                // First Name
+                FormBuilderTextField(
+                  name: 'firstName',
+                  decoration: const InputDecoration(
+                    labelText: 'First Name',
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: FormBuilderValidators.compose([
+                    FormBuilderValidators.required(),
+                    FormBuilderValidators.minLength(5),
+                    FormBuilderValidators.maxLength(15),
+                  ]),
+                ),
+                const SizedBox(height: 15),
+
+                // Last Name
+                FormBuilderTextField(
+                  name: 'lastName',
+                  decoration: const InputDecoration(
+                    labelText: 'Last Name',
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: FormBuilderValidators.compose([
+                    FormBuilderValidators.required(),
+                    FormBuilderValidators.minLength(5),
+                    FormBuilderValidators.maxLength(15),
+                  ]),
+                ),
+                const SizedBox(height: 15),
+
+                // Email
+                FormBuilderTextField(
+                  name: 'email',
+                  decoration: const InputDecoration(
+                    labelText: 'Email',
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: FormBuilderValidators.compose([
+                    FormBuilderValidators.required(),
+                    FormBuilderValidators.email(),
+                  ]),
+                ),
+                const SizedBox(height: 15),
+
+                // Phone Number
+                FormBuilderTextField(
+                  name: 'phoneNumber',
+                  decoration: const InputDecoration(
+                    labelText: 'Phone Number',
+                    border: OutlineInputBorder(),
+                  ),
+                  keyboardType: TextInputType.phone,
+                  validator: FormBuilderValidators.compose([
+                    FormBuilderValidators.required(),
+                    FormBuilderValidators.numeric(),
+                    FormBuilderValidators.equalLength(10,
+                        errorText: 'Phone number must be exactly 10 digits'),
+                  ]),
+                ),
+                const SizedBox(height: 25),
+
+                // Submit Button
+                ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState?.saveAndValidate() ?? false) {
+                      final formData = _formKey.currentState!.value;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("✅ Form submitted: $formData")),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content:
+                                Text("⚠️ Please fix the validation errors.")),
+                      );
+                    }
+                  },
+                  child: const Text("Submit"),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
