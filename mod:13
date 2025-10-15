@@ -1,0 +1,66 @@
+Question 18: Create a clock. What will be your approach to solving this problem statement?
+source code:
+import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
+void main() {
+  runApp(const MaterialApp(
+    home: ClockScreen(),
+    debugShowCheckedModeBanner: false,
+  ));
+}
+
+class ClockScreen extends StatefulWidget {
+  const ClockScreen({super.key});
+
+  @override
+  State<ClockScreen> createState() => _ClockScreenState();
+}
+
+class _ClockScreenState extends State<ClockScreen> {
+  late String currentTime;
+  Timer? timer;
+
+  @override
+  void initState() {
+    super.initState();
+    currentTime = DateFormat('HH:mm:ss').format(DateTime.now());
+    startClock();
+  }
+
+  void startClock() {
+    timer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
+      setState(() {
+        currentTime = DateFormat('HH:mm:ss').format(DateTime.now());
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel(); // Stop timer when widget is removed
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Flutter Clock"),
+        centerTitle: true,
+      ),
+      body: Center(
+        child: Text(
+          currentTime,
+          style: const TextStyle(
+            fontSize: 48,
+            fontWeight: FontWeight.bold,
+            color: Colors.blueAccent,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
