@@ -1,0 +1,98 @@
+Question 8: Create a Flutter app with two screens, each displaying a numerical value in its user interface. Upon pressing a floating action button on the home page, the value of the number will increase for both screens. Add navigation to switch between the two screens to observe the results. 
+source code:
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyCounterApp());
+}
+
+class MyCounterApp extends StatefulWidget {
+  @override
+  _MyCounterAppState createState() => _MyCounterAppState();
+}
+
+class _MyCounterAppState extends State<MyCounterApp> {
+  int counter = 0; // Shared counter value
+
+  void _incrementCounter() {
+    setState(() {
+      counter++;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Shared Counter App',
+      debugShowCheckedModeBanner: false,
+      home: HomeScreen(
+        counter: counter,
+        onIncrement: _incrementCounter,
+      ),
+      routes: {
+        '/second': (context) => SecondScreen(counter: counter),
+      },
+    );
+  }
+}
+
+class HomeScreen extends StatelessWidget {
+  final int counter;
+  final VoidCallback onIncrement;
+
+  HomeScreen({required this.counter, required this.onIncrement});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Home Screen')),
+      body: Center(
+        child: Text(
+          'Counter Value: $counter',
+          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: onIncrement,
+        child: Icon(Icons.add),
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.pushNamed(context, '/second');
+          },
+          child: Text('Go to Second Screen'),
+        ),
+      ),
+    );
+  }
+}
+
+class SecondScreen extends StatelessWidget {
+  final int counter;
+
+  SecondScreen({required this.counter});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Second Screen')),
+      body: Center(
+        child: Text(
+          'Counter Value: $counter',
+          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+        ),
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text('Back to Home Screen'),
+        ),
+      ),
+    );
+  }
+}
