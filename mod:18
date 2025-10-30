@@ -1,0 +1,68 @@
+Question 23: You are working on a Content-based application based on a flutter, client wants you to show a random lucky number on the click button. Which is the max limit is 350. What things will you require to achieve this Problem statement?
+
+Hint 1:- Add the method for generating random lucky numbers.
+Hint 2:- Add text and an Elevated button widget.
+source code:
+import 'dart:math';
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(LuckyNumberApp());
+}
+
+class LuckyNumberApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Lucky Number Generator',
+      debugShowCheckedModeBanner: false,
+      home: LuckyNumberScreen(),
+    );
+  }
+}
+
+class LuckyNumberScreen extends StatefulWidget {
+  @override
+  _LuckyNumberScreenState createState() => _LuckyNumberScreenState();
+}
+
+class _LuckyNumberScreenState extends State<LuckyNumberScreen> {
+  int? luckyNumber;
+
+  void _generateLuckyNumber() {
+    final random = Random();
+    setState(() {
+      luckyNumber = random.nextInt(351); // Generates from 0 to 350 inclusive
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Random Lucky Number')),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              luckyNumber == null
+                  ? 'Press the button to get your lucky number!'
+                  : '🎉 Your Lucky Number: $luckyNumber 🎉',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 30),
+            ElevatedButton(
+              onPressed: _generateLuckyNumber,
+              child: Text('Get Lucky Number'),
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                textStyle: TextStyle(fontSize: 18),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
