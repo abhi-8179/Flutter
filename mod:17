@@ -1,0 +1,55 @@
+Question 22: Render given texts based on the cross-platform. The first text should be shown on flutter web and the second one should be shown on android devices. What will your approach be to solve this problem statement?
+
+Text 1: This is for the web!!
+Text 2: This is for android!!
+
+Hint 1:- Use Text view.
+Hint 2:- Add check based on a platform like that if the platform is web than web text, else android text
+source code:
+import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb; // for web check
+import 'dart:io' show Platform; // for android/ios check
+
+void main() {
+  runApp(PlatformTextApp());
+}
+
+class PlatformTextApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Platform Text Example',
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        appBar: AppBar(title: Text('Platform-Based Text')),
+        body: Center(
+          child: PlatformSpecificText(),
+        ),
+      ),
+    );
+  }
+}
+
+class PlatformSpecificText extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    String textToShow;
+
+    if (kIsWeb) {
+      // If running on Flutter Web
+      textToShow = "This is for the web!!";
+    } else if (Platform.isAndroid) {
+      // If running on Android
+      textToShow = "This is for android!!";
+    } else {
+      // Fallback (for iOS, Windows, etc.)
+      textToShow = "Unsupported platform!";
+    }
+
+    return Text(
+      textToShow,
+      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+      textAlign: TextAlign.center,
+    );
+  }
+}
