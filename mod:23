@@ -1,0 +1,20 @@
+Question 09: Build a Flutter application with two screens, "About" and "Home". Use a dedicated routing class and allow the background color of the Scaffold and AppBar in the About screen to be set from the Home screen.
+source code:
+import 'package:flutter/material.dart';
+import 'routes.dart';
+
+void main() {
+  runApp(MyRoutingApp());
+}
+
+class MyRoutingApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Routing Color App',
+      debugShowCheckedModeBanner: false,
+      onGenerateRoute: AppRoutes.generateRoute,
+      initialRoute: AppRoutes.home,
+    );
+  }
+}
