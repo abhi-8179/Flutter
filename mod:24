@@ -1,0 +1,78 @@
+Question 10: Create a Flutter application using Riverpod state management where pressing a button changes the background color of the appBar and Scaffold, as well as plays one of 10 music notes. 
+source code:
+import 'dart:math';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:audioplayers/audioplayers.dart';
+
+void main() {
+  runApp(ProviderScope(child: MusicColorApp()));
+}
+
+// 🎨 Riverpod provider for background color
+final colorProvider = StateProvider<Color>((ref) => Colors.blue);
+
+// 🎵 Riverpod provider for music note index
+final noteProvider = StateProvider<int>((ref) => 1);
+
+class MusicColorApp extends ConsumerWidget {
+  const MusicColorApp({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final color = ref.watch(colorProvider);
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Riverpod Music & Color App',
+      home: MusicColorHome(color: color),
+    );
+  }
+}
+
+class MusicColorHome extends ConsumerWidget {
+  final Color color;
+  const MusicColorHome({required this.color, super.key});
+
+  void _changeColorAndPlayNote(WidgetRef ref) async {
+    final random = Random();
+
+    // Change to a random color
+    final newColor = Colors.primaries[random.nextInt(Colors.primaries.length)];
+    ref.read(colorProvider.notifier).state = newColor;
+
+    // Pick a random note (1–10)
+    int note = random.nextInt(10) + 1;
+    ref.read(noteProvider.notifier).state = note;
+
+    // Play the note
+    final player = AudioPlayer();
+    await player.play(AssetSource('sounds/note$note.wav'));
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final color = ref.watch(colorProvider);
+
+    return Scaffold(
+      backgroundColor: color,
+      appBar: AppBar(
+        backgroundColor: color,
+        title: const Text('Riverpod Music App'),
+        centerTitle: true,
+      ),
+      body: Center(
+        child: ElevatedButton.icon(
+          onPressed: () => _changeColorAndPlayNote(ref),
+          icon: const Icon(Icons.music_note),
+          label: const Text('Play Note & Change Color'),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.white,
+            foregroundColor: Colors.black,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+            textStyle: const TextStyle(fontSize: 18),
+          ),
+        ),
+      ),
+    );
+  }
+}
